@@ -20,7 +20,7 @@ int                 ft_md5_init(const unsigned char *input, usize ilen, t_md5_st
 void                ft_md5_shift(t_md5_state *state, usize idx, u32 *f, u32 *g) {
     if (idx < 16)
     {
-        *f = (DWB(state->curr) & DWC(state->curr) | ((~DWB(state->curr)) & DWD(state->curr)));
+        *f = (DWB(state->curr) & DWC(state->curr) | ((~(DWB(state->curr))) & DWD(state->curr)));
         *g = idx;
     }
     else if (idx < 32)
@@ -52,11 +52,10 @@ void                ft_md5_round(t_md5_state *state)
     {
         printf("%x %x %x %x\n", DWA(state->curr), DWB(state->curr), DWC(state->curr), DWD(state->curr));
         ft_md5_shift(state, idx, &f, &g);
-        printf("%x %x %x %x __\n", DWA(state->curr), DWB(state->curr), DWC(state->curr), DWD(state->curr));
-    
         f = f + DWA(state->curr) + K[idx] + state->cursor[g];
         f_rot = (f << S[idx]) | (f >> (32 - S[idx]));
-        ft_dig_set(&state->curr, DWD(state->curr), DWC(state->curr), DWB(state->curr), DWB(state->curr) + f_rot);
+        ft_dig_set(&state->curr, DWD(state->curr), DWB(state->curr) + f_rot, DWB(state->curr), DWC(state->curr));
+        printf("%x %x %x %x __\n", DWA(state->curr), DWB(state->curr), DWC(state->curr), DWD(state->curr));
     }
 }
 
