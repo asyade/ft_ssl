@@ -73,6 +73,7 @@ void                ft_md5(const unsigned char *input, usize ilen, t_digest *out
         DWC(state.base) += DWC(state.curr);
         DWD(state.base) += DWD(state.curr);
         state.index += 64;
+        printf("%x %x %x %x", DWA(state.base), DWB(state.base), DWC(state.base), DWD(state.base));
     }
     ft_dig_set(output, DWA(state.base), DWB(state.base), DWC(state.base), DWD(state.base));
 }
