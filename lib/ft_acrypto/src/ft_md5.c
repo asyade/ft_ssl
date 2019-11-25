@@ -7,10 +7,7 @@ int                 ft_md5_init(const unsigned char *input, usize ilen, t_md5_st
 {
     u32             bit_len;
 
-    state->a[0] = 0x67452301;
-    state->b[0] = 0xefcdab89;
-    state->c[0] = 0x98badcfe;
-    state->d[0] = 0x10325476;
+    ft_dig_set(&state->base, 0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476);
     state->index = 0;
     state->size = 0;
     if ((state->buffer = ft_padd(input, ilen, &state->size, 4)) == NULL)
@@ -23,22 +20,22 @@ int                 ft_md5_init(const unsigned char *input, usize ilen, t_md5_st
 void                ft_md5_shift(t_md5_state *state, usize idx, u32 *f, u32 *g) {
     if (idx < 16)
     {
-        *f = ((state->b[1] & state->c[1]) | ((~state->b[1]) & state->d[1]));
+        *f = (DWB(state->curr) & DWC(state->curr) | ((~DWB(state->curr)) & DWD(state->curr)));
         *g = idx;
     }
     else if (idx < 32)
     {
-        *f =  ((state->d[1] & state->b[1]) | (state->c[1] & (~state->d[1])));
+        *f =  ((DWD(state->curr) & DWB(state->curr)) | (DWC(state->curr) & (~DWD(state->curr))));
         *g = (5 * idx + 1) % 16;
     }
     else if (idx < 48)
     {
-        *f = (state->b[1] ^ state->c[1] ^ state->d[1]);
+        *f = (DWB(state->curr) ^ DWC(state->curr) ^ DWD(state->curr));
         *g = (3 * idx + 5) % 16;
     }
     else
     {
-        *f = (state->c[1] ^ (state->b[1] | (~state->d[1])));
+        *f = (DWC(state->curr) ^ (DWB(state->curr) | (~DWD(state->curr))));
         *g = (7 * idx) % 16;
     }
 }
@@ -47,21 +44,20 @@ void                ft_md5_round(t_md5_state *state)
 {
     usize           idx;
     u32             f;
-    i32             g;
+    u32             g;
+    u32             f_rot;
 
     idx = -1;
     while (++idx < 64)
     {
         ft_md5_shift(state, idx, &f, &g);
-        f = f + state->a[1] + K[idx] + state->cursor[g];
-        state->a[1] = state->d[1];
-        state->d[1] = state->c[1];
-        state->c[1] = state->b[1];
-        state->b[1] = state->b[1] + ((f << S[idx]) | (f >> (32 - S[idx])));
+        f = f + DWA(state->curr) + K[idx] + state->cursor[g];
+        f_rot = (f << S[idx]) | (f >> (32 - S[idx]));
+        ft_dig_set(&state->curr, DWD(state->curr), DWC(state->curr), DWB(state->curr), DWB(state->curr) + f_rot);
     }
 }
 
-void                ft_md5(const unsigned char *input, usize ilen, unsigned char output[16])
+void                ft_md5(const unsigned char *input, usize ilen, t_digest *output)
 {
     t_md5_state     state;
 
@@ -69,20 +65,14 @@ void                ft_md5(const unsigned char *input, usize ilen, unsigned char
         return;
     }
     while (state.index < state.size - 4) {
-        state.cursor = (i32*)(state.buffer + state.index);
-        state.a[1] = state.a[0];
-        state.b[1] = state.b[0];
-        state.c[1] = state.c[0];
-        state.d[1] = state.d[0];
+        state.cursor = (u32*)(state.buffer + state.index);
+        ft_dig_set(&state.curr, DWA(state.base), DWB(state.base), DWC(state.base), DWD(state.base));
         ft_md5_round(&state);
-        state.a[0] += state.a[1];
-        state.b[0] += state.b[1];
-        state.c[0] += state.c[1];
-        state.d[0] += state.d[1];
+        DWA(state.base) += DWA(state.curr);
+        DWB(state.base) += DWB(state.curr);
+        DWC(state.base) += DWC(state.curr);
+        DWD(state.base) += DWD(state.curr);
         state.index += 64;
     }
-    ((u32*)output)[0] = state.a[0];
-    ((u32*)output)[1] = state.b[0];
-    ((u32*)output)[2] = state.c[0];
-    ((u32*)output)[3] = state.d[0];
+    ft_dig_set(output, DWA(state.base), DWB(state.base), DWC(state.base), DWD(state.base));
 }
