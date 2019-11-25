@@ -52,6 +52,8 @@ void                ft_md5_round(t_md5_state *state)
     {
         printf("%x %x %x %x\n", DWA(state->curr), DWB(state->curr), DWC(state->curr), DWD(state->curr));
         ft_md5_shift(state, idx, &f, &g);
+        printf("%x %x %x %x __\n", DWA(state->curr), DWB(state->curr), DWC(state->curr), DWD(state->curr));
+    
         f = f + DWA(state->curr) + K[idx] + state->cursor[g];
         f_rot = (f << S[idx]) | (f >> (32 - S[idx]));
         ft_dig_set(&state->curr, DWD(state->curr), DWC(state->curr), DWB(state->curr), DWB(state->curr) + f_rot);
