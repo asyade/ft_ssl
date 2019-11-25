@@ -11,5 +11,6 @@ int main(int ac, const char **av, const char **env) {
         write(1, &base[output[i] / 16], 1);
         write(1, &base[output[i] % 16], 1);
     }
+    write(1, "\n", 1);
     return 0;
 }

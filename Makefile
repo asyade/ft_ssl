@@ -8,4 +8,4 @@ test_md5: all
 	gcc $(LIB) -C test/src/md5.c -o test/bin/md5 
 
 real_md5:
-	gcc $(LIB) -C test/src/md5_real.c -o test/bin/md5_real 
+	gcc $(LIB) -C test/src/md5_real.c -o test/bin/md5_real
