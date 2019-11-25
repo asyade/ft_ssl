@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "ft_acrypto.h": "c",
+        "ft_acstd.h": "c",
+        "stdarg.h": "c"
+    }
+}
