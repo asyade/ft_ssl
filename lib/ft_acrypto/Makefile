@@ -1,24 +1,24 @@
 CC = gcc
-NAME = acrypto.a
+NAME = libacrypto.a
 PATH_SRC = src
 ODIRS = obj/
-SRC = src/ft_md5.c src/ft_sha2.c src/ft_utils.c
+SRC = src/ft_md5.c src/ft_sha2.c src/ft_utils.c src/ft_digest.c 
 OBJ = $(patsubst $(PATH_SRC)/%.c, obj/%.o, $(SRC))
-FLAGS = -g -Wall -Wextra
-H_FILES = include/ft_acrypto.h
+FLAGS = -g3 -Wall -Wextra
+DEPS = include/ft_acrypto.h Makefile
 HEADERS = -I include/ -I ../ft_acstd/include
-LFT = ../ft_acstd/libacstd.a
+LFT = -L./../ft_acstd/ -lacstd
 
 all : $(NAME)
 
-obj/%.o : $(PATH_SRC)/%.c $(H_FILES)
+obj/%.o : $(PATH_SRC)/%.c $(DEPS)
 	make -C ../ft_acstd/	
 	mkdir -p $(ODIRS)
 	@$(CC) $(FLAGS) $(LFT) -c $< -o $@ $(HEADERS)
 	echo "\033[33mCompiling \033[32m[✔] \033[0m$<"
 
 $(NAME) : $(OBJ)
-	ar rc $(NAME) $(OBJ) obj/*.o
+	ar rc $(NAME) $(OBJ)
 	ranlib $(NAME)
 
 clean :
@@ -33,4 +33,4 @@ fclean : clean
 
 re : fclean all
 
-.PHONY : allclean fclean re
+.PHONY : all clean fclean re
