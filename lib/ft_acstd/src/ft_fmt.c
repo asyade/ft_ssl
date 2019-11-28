@@ -31,12 +31,12 @@ void				ft_putfmt_inner(const char * fmt, usize *i, va_list args)
 	{
 		if (ft_strncmp(fmt + *i + 1, "u", 1) == 0)
 		{
-			ft_putull_fd(va_arg(args, uintmax_t), 1);
+			ft_putull_fd(va_arg(args, u128), 1);
 			*i += 2;
 		}
 		else if (fmt[*i + 1] == 'x' || fmt[*i + 1] == 'p')
 		{
-			ft_putnbrbase_fd(va_arg(args, uintmax_t), "0123456789ABCDEF", 1);
+			ft_putnbrbase_fd(va_arg(args, u128), "0123456789ABCDEF", 1);
 			*i += 2;
 		}
 		else if (fmt[*i + 1] == 'd')

@@ -2,7 +2,7 @@
 
 t_vec               *ft_vec(usize elem_size)
 {
-    return (ft_vec_capacity(128, elem_size));
+    return (ft_vec_capacity(32, elem_size));
 }
 
 t_vec               *ft_vec_capacity(usize capacity, usize elem_size)
@@ -69,7 +69,6 @@ usize               ft_vec_push(t_vec **vec, void *elem)
     {
         return (-1);
     }
-    ft_putendl("Do coupy");
     ft_memcpy(elem, VPTR(*vec, (*vec)->len), (*vec)->elem_size);
     return ((*vec)->len++);
 }
@@ -84,6 +83,7 @@ usize               ft_vec_find(t_vec *vec, void *state, bool (*cmp)(void *state
         if ((cmp)(state, VPTR(vec, idx))) {
             return (idx);
         }
+        idx++;
     }
     return (-1);
 }

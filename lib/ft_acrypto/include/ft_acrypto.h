@@ -18,7 +18,7 @@
 # define DWG(digest) ((digest).word[6])
 # define DWH(digest) ((digest).word[7])
 
-# define MD5_F(st) (DWB(st) & DWC(st) | ((~(DWB(st))) & DWD(st)))
+# define MD5_F(st) ((DWB(st) & DWC(st)) | ((~(DWB(st))) & DWD(st)))
 # define MD5_G(st) ((DWD(st) & DWB(st)) | (DWC(st) & (~DWD(st))))
 # define MD5_H(st) (DWB(st) ^ DWC(st) ^ DWD(st))
 # define MD5_I(st) (DWC(st) ^ (DWB(st) | (~DWD(st))))
@@ -60,9 +60,9 @@ typedef struct  s_sha2_state
  * - *ilen*     length of the input data
  * - *output*   MD5 checksum outut data
  */
-void        ft_md5(const u8 *input, usize ilen, t_digest16 *output);
-void        ft_sha2(const u8 *input, usize ilen, t_digest32 *output);
-u8          *ft_padd(const u8* input, usize ilen, usize *olen, usize extra);
+void        ft_md5(u8 *input, usize ilen, t_digest16 *output);
+void        ft_sha2(u8 *input, usize ilen, t_digest32 *output);
+u8          *ft_padd(u8* input, usize ilen, usize *olen, usize extra);
 void        ft_dig16_set(t_digest16 *digest, u32 a, u32 b, u32 c, u32 d);
 void        ft_dig16_add(t_digest16 *digest, u32 a, u32 b, u32 c, u32 d);
 void        ft_dig32_set(t_digest32 *digest, u32 val[8]);

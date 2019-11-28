@@ -1,11 +1,30 @@
-LIB=-I lib/ft_acrypto/include/ -I lib/ft_acstd/include/ lib/ft_acstd/obj/* lib/ft_acrypto/obj/*
+CC = clang
+NAME = ft_ssl
+PATH_SRC = src
+ODIRS = obj/
+SRC = src/main.c
+OBJ = $(patsubst $(PATH_SRC)/%.c, obj/%.o, $(SRC))
+ifeq ($(PROFILE),)
+FLAGS = -o3 -Wall -Wextra
+else
+FLAGS = -g3 -fsanitize=address -Wall -Wextra
+endif
 
-all:
-	make -C lib/ft_acstd
-	make -C lib/ft_acrypto
+all : 
+	make -C lib/ft_acstd/
+	make -C lib/ft_acrypto/
+	make -C ft_ssl/
 
-test_md5: all
-	gcc $(LIB) -C test/src/md5.c -o test/bin/md5 
+clean :
+	make -C lib/ft_acstd/ clean
+	make -C lib/ft_acrypto/ clean
+	make -C ft_ssl/ cleanP
 
-real_md5:
-	gcc $(LIB) -C test/src/md5_real.c -o test/bin/md5_real
+fclean : clean
+	make -C lib/ft_acstd/ fclean
+	make -C lib/ft_acrypto/ fclean
+	make -C ft_ssl/ fclean
+
+re : fclean all
+
+.PHONY : all clean fclean re
