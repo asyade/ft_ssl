@@ -12,23 +12,6 @@ void				ft_putnbr_fd(int n, int fd)
 	ft_putchar_buff_fd((nb % 10) + '0', fd);
 }
 
-int					ft_strncmp(const char * a, const char * b, usize n)
-{
-	char			*ptra;
-	char			*ptrb;
-
-	ptra = (char *)a;
-	ptrb = (char *)b;
-	if (!ptra && !ptrb)
-		return (0);
-	while (*ptra && *ptrb && *ptra == *ptrb && n--)
-	{
-		ptra++;
-		ptrb++;
-	}
-	return (n == 0) ? 0 : ((unsigned char)*ptra - (unsigned char)*ptrb);
-}
-
 void				ft_putchar_buff_fd(char c, int fd)
 {
 	static usize	index = 0;

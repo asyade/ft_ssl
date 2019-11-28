@@ -1,11 +1,13 @@
 #ifndef FT_ACRYPTO_H
 # define FT_ACRYPTO_H
 
-# include "ft_acstd.h"
+# include <ft_acstd.h>
 # include <stdlib.h>
 
-# define RLEFT(r, n) ((r << n) | (r >> n))
-# define RRIGHT(r, n) ((r >> n) | (r << n))
+# define PANIC(str) (ft_panic(str))
+
+# define RRIGHT(r, n) ((r >> n) | (r << (32 - n)))
+# define RLEFT(r, n) ((r << n) | (r >> (32 - n)))
 
 # define DWA(digest) ((digest).word[0])
 # define DWB(digest) ((digest).word[1])

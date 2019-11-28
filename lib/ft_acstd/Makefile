@@ -2,21 +2,21 @@ CC = gcc
 NAME = libacstd.a
 PATH_SRC = src
 ODIRS = obj/
-SRC = src/ft_fmt.c src/ft_log.c src/ft_mem.c src/ft_put.c src/ft_str.c src/ft_put2.c  src/ft_math.c
+SRC = src/ft_opt.c src/ft_fmt.c src/ft_log.c src/ft_mem.c src/ft_put.c src/ft_str.c src/ft_put2.c  src/ft_math.c src/ft_vec.c
 OBJ = $(patsubst $(PATH_SRC)/%.c, obj/%.o, $(SRC))
-FLAGS = -g -Wall -Wextra -Werror
-H_FILES = include/ft_acstd.h
+FLAGS = -g3 -Wall -Wextra -Werror
+DEPS = include/ft_acstd.h Makefile
 HEADERS = -I include/
 
 all : $(NAME)
 
-obj/%.o : $(PATH_SRC)/%.c $(H_FILES)
+obj/%.o : $(PATH_SRC)/%.c $(DEPS)
 	mkdir -p $(ODIRS)
 	@$(CC) $(FLAGS) -c $< -o $@ $(HEADERS)
 	echo "\033[33mCompiling \033[32m[✔] \033[0m$<"
 
 $(NAME) : $(OBJ)
-	ar rc $(NAME) $(OBJ) obj/*.o
+	ar rc $(NAME) $(OBJ)
 	ranlib $(NAME)
 
 clean :
@@ -29,4 +29,4 @@ fclean : clean
 
 re : fclean all
 
-.PHONY : clean fclean re
+.PHONY : clean fclean re all

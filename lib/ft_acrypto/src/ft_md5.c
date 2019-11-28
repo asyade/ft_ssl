@@ -47,13 +47,14 @@ void                ft_md5_round(t_md5_state *state)
     u32             g;
     u32             f_rot;
 
-    idx = -1;
-    while (++idx < 64)
+    idx = 0;
+    while (idx < 64)
     {
         ft_md5_shift(state, idx, &f, &g);
         f = f + DWA(state->curr) + K[idx] + state->cursor[g];
-        f_rot = (f << S[idx]) | (f >> (32 - S[idx]));
+        f_rot = RLEFT(f, S[idx]);
         ft_dig16_set(&state->curr, DWD(state->curr), DWB(state->curr) + f_rot, DWB(state->curr), DWC(state->curr));
+        idx++;
     }
 }
 
