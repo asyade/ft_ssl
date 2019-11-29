@@ -5,15 +5,17 @@ static const        u32 S[] = { 7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,  
 
 int                 ft_md5_init(unsigned char *input, usize ilen, t_md5_state *state)
 {
-    u32             bit_len;
+    u32             bit_len;//TODO maybe this should be a u64 
 
     ft_dig16_set(&state->base, 0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476);
     state->index = 0;
     state->size = 0;
-    if ((state->buffer = (char *)ft_padd(input, ilen, &state->size, 4)) == NULL)
+    if ((state->buffer = (char *)ft_padd(input, ilen, &state->size, 8)) == NULL)
         return (1);
+    // state->cursor = (u32 *)state->buffer;
     bit_len = ilen * 8;
-    ft_memcpy(&bit_len, state->buffer + state->size - 4, 4);
+    ft_memcpy(&bit_len, state->buffer + state->size, 4);
+    // printf("original %ld padded %ld padoffset %ld\n", ilen, state->size, state->size);
     return (0);
 }
 
@@ -51,7 +53,9 @@ void                ft_md5_round(t_md5_state *state)
     while (idx < 64)
     {
         ft_md5_shift(state, idx, &f, &g);
+        // printf("round -> %d %d %d %d %d == %c\n",f, DWA(state->curr), DWB(state->curr), DWC(state->curr),DWD(state->curr), state->cursor[g]);
         f = f + DWA(state->curr) + K[idx] + state->cursor[g];
+        // printf("rot -> g %d idx %ld, f %d >>> %d!!\n",g ,idx, f, S[idx]);
         f_rot = RLEFT(f, S[idx]);
         ft_dig16_set(&state->curr, DWD(state->curr), DWB(state->curr) + f_rot, DWB(state->curr), DWC(state->curr));
         idx++;
@@ -66,7 +70,9 @@ void                ft_md5( unsigned char *input, usize ilen, t_digest16 *output
         return;
     }
     while (state.index < state.size - 4) {
+        // printf("block -> [%ld; %ld]\n", state.index, state.index + 64);
         state.cursor = (u32*)(state.buffer + state.index);
+        // printf("cursor %d\n", *state.cursor);
         state.curr = state.base;
         ft_md5_round(&state);
         ft_dig16_add(&state.base, DWA(state.curr), DWB(state.curr), DWC(state.curr), DWD(state.curr));

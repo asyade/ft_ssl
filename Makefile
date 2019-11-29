@@ -18,13 +18,17 @@ all :
 clean :
 	make -C lib/ft_acstd/ clean
 	make -C lib/ft_acrypto/ clean
-	make -C ft_ssl/ cleanP
+	make -C ft_ssl/ clean
 
 fclean : clean
 	make -C lib/ft_acstd/ fclean
 	make -C lib/ft_acrypto/ fclean
 	make -C ft_ssl/ fclean
 
+test:
+	gcc test/src/md5.c -o test/bin/md5 -g3
+	gcc test/src/sha2.c -o test/bin/sha2 -g3
+
 re : fclean all
 
-.PHONY : all clean fclean re
+.PHONY : all clean fclean re test

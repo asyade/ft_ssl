@@ -39,18 +39,44 @@ void                md5(t_opts *opts)
 {
     t_buffer        *raw;
     usize           raw_len;
-    
+    t_digest16      digest;
+    char            *craw;
+
     if ((raw = ft_fillbuf_fd(0, &raw_len)) == NULL) {
-        ft_putendl("FUU");
+        ft_putendl("No enough memory !");
+    } else {
+        craw = raw + 1;
+        ft_md5(craw, raw_len, &digest);
+        int i = 0;
+        char *base = "0123456789abcdef";
+        ft_pustr("(stdin)= ");
+        for (int i = 0; i < 16; i++) {
+            write(1, &base[digest.raw[i] / 16], 1);
+            write(1, &base[digest.raw[i] % 16], 1);
+        }
+        ft_putendl("");
     }
-    printf("## %ld\n\n", raw_len);
-    write(1, ft_bufrd(raw, raw_len, 0), raw_len);
 }
 
 void                sha2(t_opts *opts)
 {
-    ft_putendl("SHA2");
-}
+    t_buffer        *raw;
+    usize           raw_len;
+    t_digest32      digest;
+    
+    if ((raw = ft_fillbuf_fd(0, &raw_len)) == NULL) {
+        ft_putendl("No enough memory !");
+    } else {
+        ft_sha2(raw, raw_len, &digest);
+        int i = 0;
+        char *base = "0123456789abcdef";
+        ft_pustr("(stdin)= ");
+        for (int i = 0; i < 32; i++) {
+            write(1, &base[digest.raw[i] / 16], 1);
+            write(1, &base[digest.raw[i] % 16], 1);
+        }
+        ft_putendl("");
+    }}
 
 int                 main(int ac, char **av) {
     t_opts          opts;

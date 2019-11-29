@@ -9,8 +9,6 @@ LSTD = -I./../lib/ft_acstd/include -L../lib/ft_acstd -lacstd
 INC = -I ./include
 
 all : $(NAME)
-	make -C ../lib/ft_acstd/
-	make -C ../lib/ft_acrypto/
 
 obj/%.o : $(PATH_SRC)/%.c $(DEPS) ../lib/ft_acrypto/src/* ../lib/ft_acstd/src/* ../lib/ft_acrypto/include/* ../lib/ft_acstd/include/*
 	mkdir -p $(ODIRS)
@@ -20,13 +18,9 @@ $(NAME) : $(OBJ)
 	gcc -o $(NAME) $(OBJ) $(LCRYPTO) $(LSTD)
 
 clean :
-	make -C ../lib/ft_acstd/ clean
-	make -C ../lib/ft_acrypto/ clean
 	/bin/rm -rf obj/
 
 fclean : clean
-	make -C ./../lib/ft_acstd/ fclean
-	make -C ./../lib/ft_acrypto/ fclean 
 	/bin/rm -f $(NAME)
 
 re : fclean all

@@ -2,6 +2,7 @@
 # define FT_SSL_H
 
 #include "ft_acstd.h"
+#include "ft_acrypto.h"
 
 
 #endif

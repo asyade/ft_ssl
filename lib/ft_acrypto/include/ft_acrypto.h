@@ -6,8 +6,8 @@
 
 # define PANIC(str) (ft_panic(str))
 
-# define RRIGHT(r, n) ((r >> n) | (r << (32 - n)))
-# define RLEFT(r, n) ((r << n) | (r >> (32 - n)))
+# define RRIGHT(r, n) ((r >> n) | ((r) << (32 - (n))))
+# define RLEFT(r, n) ((r << n) | ((r) >> (32 - (n))))
 
 # define DWA(digest) ((digest).word[0])
 # define DWB(digest) ((digest).word[1])
@@ -19,7 +19,7 @@
 # define DWH(digest) ((digest).word[7])
 
 # define MD5_F(st) ((DWB(st) & DWC(st)) | ((~(DWB(st))) & DWD(st)))
-# define MD5_G(st) ((DWD(st) & DWB(st)) | (DWC(st) & (~DWD(st))))
+# define MD5_G(st) ((DWD(st) & DWB(st)) | ((~DWD(st)) & DWC(st)))
 # define MD5_H(st) (DWB(st) ^ DWC(st) ^ DWD(st))
 # define MD5_I(st) (DWC(st) ^ (DWB(st) | (~DWD(st))))
 
