@@ -1,8 +1,9 @@
 #include "ft_ssl.h"
 
-# define OPT_DEBUG  1
-# define CMD_MD5    2
-# define CMD_SHA2   3
+# define OPT_DEBUG      1
+# define CMD_MD5        2
+# define CMD_SHA256     3
+# define CMD_SHA224     4
 
 int                setup_opt(t_opts *opts) {
     t_param_def     def;
@@ -26,8 +27,15 @@ int                setup_opt(t_opts *opts) {
     };
     ft_vec_push(&opts->template.sub, &cdef);
     cdef = (t_cmd_def) {
-        CMD_SHA2,
-        "sha2",
+        CMD_SHA256,
+        "sha256",
+        NULL,
+        NULL,
+    };
+    ft_vec_push(&opts->template.sub, &cdef);
+    cdef = (t_cmd_def) {
+        CMD_SHA224,
+        "sha224",
         NULL,
         NULL,
     };
@@ -41,47 +49,65 @@ void                md5(t_opts *opts)
     usize           raw_len;
     t_digest16      digest;
     char            *craw;
+    char out[32];
 
     if ((raw = ft_fillbuf_fd(0, &raw_len)) == NULL) {
         ft_putendl("No enough memory !");
     } else {
         craw = (char *)(raw + 1);
-        ft_md5(craw, raw_len, &digest);
-        int i = 0;
-        char *base = "0123456789abcdef";
+        ft_md5((u8 *)craw, raw_len, &digest);
         ft_pustr("(stdin)= ");
-        for (int i = 0; i < 16; i++) {
-            write(1, &base[digest.raw[i] / 16], 1);
-            write(1, &base[digest.raw[i] % 16], 1);
-        }
-        ft_putendl("");
+        ft_digdump(digest.raw, (char *)out, 16);
+        ft_putendl((char *)out);
     }
     ft_buffree(raw);
+    opts++;
 }
 
-void                sha2(t_opts *opts)
+void                sha256(t_opts *opts)
 {
     t_buffer        *raw;
     char            *craw;
     usize           raw_len;
     t_digest32      digest;
+    char out[64];
+
     
     if ((raw = ft_fillbuf_fd(0, &raw_len)) == NULL) {
         ft_putendl("No enough memory !");
     } else {
         craw = (char *)(raw + 1);
-        ft_sha2(craw, raw_len, &digest);
-        int i = 0;
-        char *base = "0123456789abcdef";
+        ft_sha256((u8 *)craw, raw_len, &digest);
         ft_pustr("(stdin)= ");
-        for (int i = 0; i < 32; i++) {
-            write(1, &base[digest.raw[i] / 16], 1);
-            write(1, &base[digest.raw[i] % 16], 1);
-        }
-        ft_putendl("");
+        ft_digdump(digest.raw, (char *)out, 32);
+        ft_putendl((char *)out);
     }
     ft_buffree(raw);
+    opts++;
 }
+
+void                sha224(t_opts *opts)
+{
+    t_buffer        *raw;
+    char            *craw;
+    usize           raw_len;
+    t_digest32      digest;
+    char out[49];
+
+
+    if ((raw = ft_fillbuf_fd(0, &raw_len)) == NULL) {
+        ft_putendl("No enough memory !");
+    } else {
+        craw = (char *)(raw + 1);
+        ft_sha224((u8 *)craw, raw_len, &digest);
+        ft_pustr("(stdin) = ");
+        ft_digdump(digest.raw, (char *)out, 24);
+        ft_putendl((char *)out);
+    }
+    ft_buffree(raw);
+    opts++;
+}
+
 int                 main(int ac, char **av) {
     t_opts          opts;
     
@@ -101,9 +127,14 @@ int                 main(int ac, char **av) {
     if (opts.match.sub->id == CMD_MD5)
     {
         md5(&opts);
-    } else if (opts.match.sub->id == CMD_SHA2)
+    }
+    else if (opts.match.sub->id == CMD_SHA256)
     {
-        sha2(&opts);
+        sha256(&opts);
+    } 
+    else if (opts.match.sub->id == CMD_SHA224)
+    {
+        sha224(&opts);
     }
     return (0);
 }

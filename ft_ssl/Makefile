@@ -8,6 +8,9 @@ LCRYPTO = -I./../lib/ft_acrypto/include -L../lib/ft_acrypto -lacrypto
 LSTD = -I./../lib/ft_acstd/include -L../lib/ft_acstd -lacstd
 INC = -I ./include
 
+CC=gcc
+FLAGS = -g3 -Wall -Wextra -Werror
+
 all : $(NAME)
 
 obj/%.o : $(PATH_SRC)/%.c $(DEPS) ../lib/ft_acrypto/src/* ../lib/ft_acstd/src/* ../lib/ft_acrypto/include/* ../lib/ft_acstd/include/*

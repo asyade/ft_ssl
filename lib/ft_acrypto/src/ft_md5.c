@@ -62,7 +62,7 @@ void                ft_md5_round(t_md5_state *state)
     }
 }
 
-void                ft_md5( unsigned char *input, usize ilen, t_digest16 *output)
+void                ft_md5(unsigned char *input, usize ilen, t_digest16 *output)
 {
     t_md5_state     state;
 

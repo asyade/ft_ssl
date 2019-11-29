@@ -6,6 +6,9 @@ OBJ = $(patsubst $(PATH_SRC)/%.c, obj/%.o, $(SRC))
 DEPS = include/ft_acstd.h Makefile
 HEADERS = -I include/
 
+CC=gcc
+FLAGS = -g3 -Wall -Wextra -Werror
+
 all : $(NAME)
 
 obj/%.o : $(PATH_SRC)/%.c $(DEPS)

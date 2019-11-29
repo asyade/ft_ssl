@@ -1,7 +1,7 @@
 NAME = libacrypto.a
 PATH_SRC = src
 ODIRS = obj/
-SRC = src/ft_md5.c src/ft_sha2.c src/ft_utils.c src/ft_digest.c 
+SRC = src/ft_md5.c src/ft_sha2.c src/ft_utils.c src/ft_digest.c src/ft_sha2_op.c
 OBJ = $(patsubst $(PATH_SRC)/%.c, obj/%.o, $(SRC))
 DEPS = include/ft_acrypto.h Makefile
 HEADERS = -I include/ -I ../ft_acstd/include
@@ -9,9 +9,6 @@ LFT = -L./../ft_acstd/ -lacstd
 
 CC=gcc
 FLAGS = -g3 -Wall -Wextra -Werror
-
-export CC
-export FLAGS
 
 all : $(NAME)
 

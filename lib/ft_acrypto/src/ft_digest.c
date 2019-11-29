@@ -39,3 +39,19 @@ void ft_dig32_set(t_digest32 *digest, u32 val[8])
     digest->word[6] = val[6];
     digest->word[7] = val[7];
 }
+
+void    ft_digdump(u8 *digest, char *out, usize len)
+{
+    usize   i;
+    char    *base;
+
+    i = 0;
+    base = "0123456789abcdef";
+    while (len--)
+    {
+        *out++ = base[digest[i] / 16];
+        *out++ = base[digest[i] % 16];
+        i++;
+    }
+    *out = '\0';
+}

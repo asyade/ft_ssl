@@ -28,7 +28,7 @@ typedef union  u_digest16 {
     u32         word[4];
 }               t_digest16;
 
-typedef union  u_digest512 {
+typedef union  u_digest32 {
     u8          raw[32];
     u32         word[8];
 }               t_digest32;
@@ -61,11 +61,24 @@ typedef struct  s_sha2_state
  * - *output*   MD5 checksum outut data
  */
 void        ft_md5(u8 *input, usize ilen, t_digest16 *output);
-void        ft_sha2(u8 *input, usize ilen, t_digest32 *output);
+
+void        ft_sha256(u8 *input, usize ilen, t_digest32 *output);
+void        ft_sha224(u8 *input, usize ilen, t_digest32 *output);
+
+
 u8          *ft_padd(u8* input, usize ilen, usize *olen, usize extra);
 void        ft_dig16_set(t_digest16 *digest, u32 a, u32 b, u32 c, u32 d);
 void        ft_dig16_add(t_digest16 *digest, u32 a, u32 b, u32 c, u32 d);
 void        ft_dig32_set(t_digest32 *digest, u32 val[8]);
 void        ft_dig32_add(t_digest32 *digest, u32 val[8]);
+void        ft_digdump(u8 *digest, char *out, usize len);
+
+u32         ft_ch(u32 x, u32 y, u32 z);
+u32         ft_maj(u32 x, u32 y, u32 z);
+u32         ft_e0(u32 x);
+u32         ft_e1(u32 x);
+u32         ft_s0(u32 x);
+u32         ft_s1(u32 x);
+
 
 #endif
