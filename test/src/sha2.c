@@ -82,7 +82,7 @@ int main(int argc, char* argv[]) {
     };
 
     // 5.3.2
-    uint32_t H[] = {
+uint32_t H[] = {
         0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
     };
 
@@ -101,6 +101,7 @@ int main(int argc, char* argv[]) {
     memcpy(msgPad, msg, len);
     msgPad[len] = 0x80;
     l = swapE64(l);
+    printf("%d\n", (msgSize/8)-8);
     memcpy(msgPad+(msgSize/8)-8, &l, 8);
     printf("original %d padded %d padoffset %d\n", len, msgSize / 8, (msgSize/8)-8);
     // 5.2.1

@@ -6,22 +6,25 @@ void            ft_sha2_init( u8 *input, usize ilen, t_sha2_state *state)
 {
     u64         bit_len;
 
-    bit_len = ilen * 8;
     ft_dig32_set(&state->h, (u32[]){ 0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19 });
     state->buffer = ft_padd(input, ilen, &state->size, 8);//TODO check malloc
     state->index = 0;
+    bit_len = ft_swap_64(ilen * 8);
     ft_memcpy(&bit_len, state->buffer + state->size - 8, 8);
+    printf("%ld\n", state->size - 8);
+    
     printf("original %ld padded %ld padoffset %ld\n", ilen, state->size, state->size - 8);
 
 }
 
-void            ft_sha2_extend(t_sha2_state *state) {
+
+void            ft_sha2_extend(t_sha2_state *state, isize ilen) {
     isize       idx;
     u32         s0;
     u32         s1;
 
-    idx = 16;
-    while (idx < 64)
+    idx = 0;
+    while (idx < ilen)
     {
         s0 = RRIGHT(state->w[idx-15],  7) ^ RRIGHT(state->w[idx-15], 18) ^ RRIGHT(state->w[idx-15],  3);
         s1 = RRIGHT(state->w[idx- 2], 17) ^ RRIGHT(state->w[idx- 2], 19) ^ RRIGHT(state->w[idx- 2], 10);
@@ -55,9 +58,10 @@ void            ft_sha2( u8 *input, usize ilen, t_digest32 *output)
     t_sha2_state    state;
 
     ft_sha2_init(input, ilen, &state);
+    ft_swap_32_array((u32 *)state.buffer, state.size / 4);
     while (state.index < state.size - 8) {
         ft_memcpy(state.buffer + state.index, (void *)state.w, 16 * sizeof(int));
-        ft_sha2_extend(&state);
+        ft_sha2_extend(&state, (isize)ilen);
         state.curr = state.h;
         ft_sha2_comp(&state);
         ft_dig32_add(&state.h, state.curr.word);

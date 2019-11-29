@@ -1,7 +1,7 @@
 NAME = libacstd.a
 PATH_SRC = src
 ODIRS = obj/
-SRC = src/ft_opt.c src/ft_fmt.c src/ft_log.c src/ft_mem.c src/ft_put.c src/ft_str.c src/ft_put2.c  src/ft_math.c src/ft_vec.c src/ft_buffer.c src/ft_cursor.c
+SRC = src/ft_opt.c src/ft_fmt.c src/ft_log.c src/ft_mem.c src/ft_put.c src/ft_str.c src/ft_put2.c  src/ft_math.c src/ft_vec.c src/ft_buffer.c src/ft_cursor.c src/ft_endian.c
 OBJ = $(patsubst $(PATH_SRC)/%.c, obj/%.o, $(SRC))
 DEPS = include/ft_acstd.h Makefile
 HEADERS = -I include/

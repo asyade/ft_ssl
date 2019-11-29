@@ -122,6 +122,10 @@ usize               ft_vec_find(t_vec *vec, void *state, bool (*cmp)(void *state
 
 # define FILLBUFF_FD_SIZE   16
 
+void                ft_swap_32_array(u32 *val, usize count);
+u64                 ft_swap_64(u64 val);
+u32                 ft_swap_32(u32 val);
+
 void                ft_buffree(t_buffer *buffer);
 t_buffer            *ft_buf(usize size);
 i32                 ft_bufwr(t_buffer *dst, void *src, usize len, usize offset);
