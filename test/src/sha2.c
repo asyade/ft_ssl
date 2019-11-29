@@ -101,9 +101,7 @@ uint32_t H[] = {
     memcpy(msgPad, msg, len);
     msgPad[len] = 0x80;
     l = swapE64(l);
-    printf("%d\n", (msgSize/8)-8);
     memcpy(msgPad+(msgSize/8)-8, &l, 8);
-    printf("original %d padded %d padoffset %d\n", len, msgSize / 8, (msgSize/8)-8);
     // 5.2.1
     size_t N = msgSize / 512;
 
@@ -133,12 +131,18 @@ uint32_t H[] = {
             v[t] = H[t];
         }
 
+
         // 3
+        for(size_t t = 0; t < 64; t++) {
+        printf("W %8x\n", W[t]);
+        }
         for(size_t t = 0; t < 64; t++) {
 
             // a=0 b=1 c=2 d=3 e=4 f=5 g=6 h=7
             T1 = v[7] + ep1(v[4]) + Ch(v[4], v[5], v[6]) + K[t] + W[t];
+
             T2 = ep0(v[0]) + Maj(v[0], v[1], v[2]);
+            printf("%8x %8x %8x k=%8x w=%8x ~ %8x %8x\n", v[7], ep1(v[4]), Ch(v[4], v[5], v[6]), K[t], W[t], T1, T2);
 
             v[7] = v[6];
             v[6] = v[5];
@@ -148,18 +152,19 @@ uint32_t H[] = {
             v[2] = v[1];
             v[1] = v[0];
             v[0] = T1 + T2;
+    // printf("%x %x %x %x %x %x %x %x\n", v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7]);
         }
-        printf("%x %x %x %x %x %x %x %x\n", H[0], H[1], H[2], H[3], H[4], H[5], H[6], H[7]);
+
         for(size_t t = 0; t < 8; t++) {
             H[t] += v[t];
         }
 
     }
-
     for(size_t i = 0; i < 8; i++) {
         H[i] = swapE32(H[i]);
         hex(&H[i], 4);
     }
+
     printf("\n");
 
     free(msgPad);

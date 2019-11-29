@@ -2,6 +2,8 @@
     "files.associations": {
         "ft_acrypto.h": "c",
         "ft_acstd.h": "c",
-        "stdarg.h": "c"
+        "stdarg.h": "c",
+        "ft_ssl.h": "c",
+        "assert.h": "c"
     }
 }

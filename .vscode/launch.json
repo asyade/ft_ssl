@@ -8,14 +8,14 @@
             "name": "(gdb) Lancer",
             "type": "cppdbg",
             "request": "launch",
-            "program": "entrer le nom du programme, par exemple ${workspaceFolder}/a.exe",
-            "args": [],
+            "program": "${workspaceFolder}/ft_ssl/ft_ssl",
+            "args": ["md5"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
-            "miDebuggerPath": "/path/to/gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
             "setupCommands": [
                 {
                     "description": "Activer l'impression en mode Pretty pour gdb",
