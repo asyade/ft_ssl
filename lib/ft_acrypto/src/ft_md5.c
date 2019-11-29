@@ -14,7 +14,7 @@ int                 ft_md5_init(unsigned char *input, usize ilen, t_md5_state *s
         return (1);
     // state->cursor = (u32 *)state->buffer;
     bit_len = ilen * 8;
-    ft_memcpy(&bit_len, state->buffer + state->size, 4);
+    ft_memcpy(&bit_len, state->buffer + state->size - 8, 4);
     // printf("original %ld padded %ld padoffset %ld\n", ilen, state->size, state->size);
     return (0);
 }

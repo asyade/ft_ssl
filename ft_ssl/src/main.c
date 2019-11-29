@@ -45,7 +45,7 @@ void                md5(t_opts *opts)
     if ((raw = ft_fillbuf_fd(0, &raw_len)) == NULL) {
         ft_putendl("No enough memory !");
     } else {
-        craw = raw + 1;
+        craw = (char *)(raw + 1);
         ft_md5(craw, raw_len, &digest);
         int i = 0;
         char *base = "0123456789abcdef";
@@ -56,18 +56,21 @@ void                md5(t_opts *opts)
         }
         ft_putendl("");
     }
+    ft_buffree(raw);
 }
 
 void                sha2(t_opts *opts)
 {
     t_buffer        *raw;
+    char            *craw;
     usize           raw_len;
     t_digest32      digest;
     
     if ((raw = ft_fillbuf_fd(0, &raw_len)) == NULL) {
         ft_putendl("No enough memory !");
     } else {
-        ft_sha2(raw, raw_len, &digest);
+        craw = (char *)(raw + 1);
+        ft_sha2(craw, raw_len, &digest);
         int i = 0;
         char *base = "0123456789abcdef";
         ft_pustr("(stdin)= ");
@@ -76,8 +79,9 @@ void                sha2(t_opts *opts)
             write(1, &base[digest.raw[i] % 16], 1);
         }
         ft_putendl("");
-    }}
-
+    }
+    ft_buffree(raw);
+}
 int                 main(int ac, char **av) {
     t_opts          opts;
     
@@ -103,3 +107,4 @@ int                 main(int ac, char **av) {
     }
     return (0);
 }
+

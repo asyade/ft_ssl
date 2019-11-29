@@ -1,4 +1,6 @@
 **/**.o
 **/**.a
 **/**.exe
+test/bin/*
+test/bin
 ft_ssl/ft_ssl

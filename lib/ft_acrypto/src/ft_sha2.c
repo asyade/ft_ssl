@@ -10,8 +10,8 @@ void            ft_sha2_init( u8 *input, usize ilen, t_sha2_state *state)
     ft_dig32_set(&state->h, (u32[]){ 0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19 });
     state->buffer = ft_padd(input, ilen, &state->size, 8);//TODO check malloc
     state->index = 0;
-    ft_memcpy(&bit_len, state->buffer + ilen - 8, bit_len);
-    printf("original %ld padded %ld padoffset %ld\n", ilen, bit_len, ilen - 8);
+    ft_memcpy(&bit_len, state->buffer + state->size - 8, 8);
+    printf("original %ld padded %ld padoffset %ld\n", ilen, state->size, state->size - 8);
 
 }
 

@@ -5,7 +5,7 @@ u8       *ft_padd(u8* input, usize ilen, usize *olen, usize extra) {
     usize           new_len;
 
     new_len = ((((ilen+8) / 64) + 1) * 64) - 8;
-    *olen = new_len;
+    *olen = new_len + extra;
     if ((buffer = malloc(new_len + extra)) == NULL)
         return NULL;
     ft_memcpy(input, buffer, ilen);
