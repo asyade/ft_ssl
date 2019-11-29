@@ -11,25 +11,30 @@ void            ft_sha2_init( u8 *input, usize ilen, t_sha2_state *state)
     state->index = 0;
     bit_len = ft_swap_64(ilen * 8);
     ft_memcpy(&bit_len, state->buffer + state->size - 8, 8);
-    printf("%ld\n", state->size - 8);
-    
-    printf("original %ld padded %ld padoffset %ld\n", ilen, state->size, state->size - 8);
-
 }
 
 
-void            ft_sha2_extend(t_sha2_state *state, isize ilen) {
+void            ft_sha2_extend(t_sha2_state *state) {
     isize       idx;
     u32         s0;
     u32         s1;
 
     idx = 0;
-    while (idx < ilen)
+    while (idx < 16)
+    {
+        state->w[idx] = *((u32 *)(state->buffer + state->index + idx));
+        printf("%ld -> %ld", idx, state->index + idx);
+        idx++;
+
+    }
+    idx = 16;
+    while (idx < 64)
     {
         s0 = RRIGHT(state->w[idx-15],  7) ^ RRIGHT(state->w[idx-15], 18) ^ RRIGHT(state->w[idx-15],  3);
         s1 = RRIGHT(state->w[idx- 2], 17) ^ RRIGHT(state->w[idx- 2], 19) ^ RRIGHT(state->w[idx- 2], 10);
         state->w[idx] = state->w[idx-16] + s0 + state->w[idx-7] + s1;
-        idx++;
+        printf("%d\n", state->w[idx]);
+        idx ++;
     }
 }
 
@@ -46,11 +51,13 @@ void            ft_sha2_comp(t_sha2_state *state)
         tmp[0] = DWH(state->curr) + s[1] + ((DWE(state->curr) & DWF(state->curr)) ^ ((~DWE(state->curr)) & DWG(state->curr))) + K[i] + state->w[i];
         s[0] = RRIGHT(DWA(state->curr), 2) ^ RRIGHT(DWA(state->curr), 13) ^ RRIGHT(DWA(state->curr), 22);
         tmp[1] = s[0] + ((DWA(state->curr) & DWB(state->curr)) ^ (DWA(state->curr) & DWC(state->curr)) ^ (DWB(state->curr) & DWC(state->curr)));
-        ft_dig32_set(&state->curr, (u32[]) {
-            tmp[0] + tmp[1], DWA(state->curr), DWB(state->curr), DWC(state->curr), DWD(state->curr) + tmp[0], DWE(state->curr), DWF(state->curr), DWG(state->curr)
-        });
+
         i++;
     }
+    printf("%x %x %x %x %x %x %x %x\n", state->curr.word[0], state->curr.word[1], state->curr.word[2], state->curr.word[3], state->curr.word[4], state->curr.word[5], state->curr.word[6], state->curr.word[7]);
+    ft_dig32_set(&state->curr, (u32[]) {
+        tmp[0] + tmp[1], DWA(state->curr), DWB(state->curr), DWC(state->curr), DWD(state->curr) + tmp[0], DWE(state->curr), DWF(state->curr), DWG(state->curr)
+    });
 }
 
 void            ft_sha2( u8 *input, usize ilen, t_digest32 *output)
@@ -61,7 +68,7 @@ void            ft_sha2( u8 *input, usize ilen, t_digest32 *output)
     ft_swap_32_array((u32 *)state.buffer, state.size / 4);
     while (state.index < state.size - 8) {
         ft_memcpy(state.buffer + state.index, (void *)state.w, 16 * sizeof(int));
-        ft_sha2_extend(&state, (isize)ilen);
+        ft_sha2_extend(&state);
         state.curr = state.h;
         ft_sha2_comp(&state);
         ft_dig32_add(&state.h, state.curr.word);

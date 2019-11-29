@@ -119,6 +119,7 @@ uint32_t H[] = {
 
     // 6.2.2
     for(size_t i = 0; i < N; i++) {
+        
         // 1
         for(size_t t = 0; t < 16; t++) {
             W[t] = M[i*16 + t];
@@ -134,6 +135,7 @@ uint32_t H[] = {
 
         // 3
         for(size_t t = 0; t < 64; t++) {
+
             // a=0 b=1 c=2 d=3 e=4 f=5 g=6 h=7
             T1 = v[7] + ep1(v[4]) + Ch(v[4], v[5], v[6]) + K[t] + W[t];
             T2 = ep0(v[0]) + Maj(v[0], v[1], v[2]);
@@ -147,10 +149,11 @@ uint32_t H[] = {
             v[1] = v[0];
             v[0] = T1 + T2;
         }
-
+        printf("%x %x %x %x %x %x %x %x\n", H[0], H[1], H[2], H[3], H[4], H[5], H[6], H[7]);
         for(size_t t = 0; t < 8; t++) {
             H[t] += v[t];
         }
+
     }
 
     for(size_t i = 0; i < 8; i++) {
