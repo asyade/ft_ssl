@@ -4,8 +4,30 @@
 # define CMD_MD5        2
 # define CMD_SHA256     3
 # define CMD_SHA224     4
+# define OPT_VAL        5
 
-int                setup_opt(t_opts *opts) {
+t_vec               *md5_opt()
+{
+    t_vec           *params;
+    t_param_def     def;
+
+    if ((params = ft_vec(sizeof(t_param_def))) == NULL)
+    {
+        return (NULL);
+    }
+    def = (t_param_def){
+        OPT_VAL,
+        "string",
+        "s",
+        String,
+        FALSE,
+    };
+    ft_vec_push(&params, &def);
+    return (params);
+}
+
+int                setup_opt(t_opts *opts)
+{
     t_param_def     def;
     t_cmd_def       cdef;
 
@@ -22,7 +44,7 @@ int                setup_opt(t_opts *opts) {
     cdef = (t_cmd_def) {
         CMD_MD5,
         "md5",
-        NULL,
+        md5_opt(),
         NULL,
     };
     ft_vec_push(&opts->template.sub, &cdef);
@@ -43,98 +65,58 @@ int                setup_opt(t_opts *opts) {
     return (0);
 }
 
-void                md5(t_opts *opts)
+void                md5(t_ctx *ctx)
 {
-    t_buffer        *raw;
-    usize           raw_len;
-    t_digest16      digest;
-    char            *craw;
-    char out[32];
-
-    if ((raw = ft_fillbuf_fd(0, &raw_len)) == NULL) {
-        ft_putendl("No enough memory !");
-    } else {
-        craw = (char *)(raw + 1);
-        ft_md5((u8 *)craw, raw_len, &digest);
-        ft_pustr("(stdin)= ");
-        ft_digdump(digest.raw, (char *)out, 16);
-        ft_putendl((char *)out);
-    }
-    ft_buffree(raw);
-    opts++;
+    ctx++;
 }
 
-void                sha256(t_opts *opts)
+void                sha256(t_ctx *ctx)
 {
-    t_buffer        *raw;
-    char            *craw;
-    usize           raw_len;
-    t_digest32      digest;
-    char out[64];
-
-    
-    if ((raw = ft_fillbuf_fd(0, &raw_len)) == NULL) {
-        ft_putendl("No enough memory !");
-    } else {
-        craw = (char *)(raw + 1);
-        ft_sha256((u8 *)craw, raw_len, &digest);
-        ft_pustr("(stdin)= ");
-        ft_digdump(digest.raw, (char *)out, 32);
-        ft_putendl((char *)out);
-    }
-    ft_buffree(raw);
-    opts++;
+    ctx++;
 }
 
-void                sha224(t_opts *opts)
+void                sha224(t_ctx *ctx)
 {
-    t_buffer        *raw;
-    char            *craw;
-    usize           raw_len;
-    t_digest32      digest;
-    char out[49];
-
-
-    if ((raw = ft_fillbuf_fd(0, &raw_len)) == NULL) {
-        ft_putendl("No enough memory !");
-    } else {
-        craw = (char *)(raw + 1);
-        ft_sha224((u8 *)craw, raw_len, &digest);
-        ft_pustr("(stdin) = ");
-        ft_digdump(digest.raw, (char *)out, 24);
-        ft_putendl((char *)out);
-    }
-    ft_buffree(raw);
-    opts++;
+    ctx++;
 }
 
 int                 main(int ac, char **av) {
-    t_opts          opts;
-    
-    if (setup_opt(&opts) != 0)
+    t_ctx           context;
+    t_param         *pval;
+    if (setup_opt(&context.opts) != 0)
     {
         return (1);
     }
-    if (ft_getopt(&opts, av + 1, ac - 1) != 0)
+    if (ft_getopt(&context.opts, av + 1, ac - 1) != 0)
     {
-        ft_useopt(&opts);
+        ft_useopt(&context.opts);
         return (1);
     }
-    if (opts.match.sub == NULL) {
-        ft_putendl_fd("subcommand required: [md5, sha2]", 1);
+    if (context.opts.match.sub == NULL) {
+        ft_putendl_fd("subcommand required: [md5, sha256, sha224]", 1);
         return (1);
     }
-    if (opts.match.sub->id == CMD_MD5)
-    {
-        md5(&opts);
+    context.stdin_raw = NULL;
+
+        printf("FOund value\n");
+
+    if  ((pval = ft_opt_param(context.opts.match.sub, OPT_VAL)) != NULL) {
+        printf("FOund value\n");
+        printf("%s\n", pval->value);
+    } else {
+        context.stdin_raw = ft_fillbuf_fd(0, &context.stdin_len);
     }
-    else if (opts.match.sub->id == CMD_SHA256)
+    if (context.opts.match.sub->id == CMD_MD5)
     {
-        sha256(&opts);
+        md5(&context);
+    }
+    else if (context.opts.match.sub->id == CMD_SHA256)
+    {
+        sha256(&context);
     } 
-    else if (opts.match.sub->id == CMD_SHA224)
+    else if (context.opts.match.sub->id == CMD_SHA224)
     {
-        sha224(&opts);
+        sha224(&context);
     }
     return (0);
 }

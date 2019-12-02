@@ -99,6 +99,8 @@ typedef struct      s_opts
 
 int         ft_getopt(t_opts *opts, char **av, i32 ac);
 void        ft_useopt(t_opts *opts);
+t_param     *ft_opt_param(t_cmd *cmd, u32 id);
+
 
 // VEC
 

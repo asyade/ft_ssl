@@ -51,6 +51,16 @@ int         ft_inicmd(t_cmd *opts) {
     return (0);
 }
 
+t_param     *ft_opt_param(t_cmd *cmd, u32 id)
+{
+    usize   idx;
+
+    if ((idx = ft_vec_find(cmd->params, &id, ft_cmp_param_id)) == (usize)-1) {
+        return (NULL);
+    }
+    return (VPTR(cmd->params, idx));
+}
+
 int         ft_parsecmd(t_cmd_def *cmd, t_cmd *out, char **values, i32 vc) {
     usize       findex;
     t_param_def *def;
@@ -65,8 +75,21 @@ int         ft_parsecmd(t_cmd_def *cmd, t_cmd *out, char **values, i32 vc) {
                 ft_putstr_fd("Error: Duplicate argument: ", 2);
                 ft_putendl_fd(def->long_name, 2);
             }
+            if (def->kind == Flag)
+            {
+                new.value = NULL;
+            }
+            else if (def->kind == String)
+            {
+                if (vc == 1) {
+                    ft_putstr_fd("Error: Expect value after ", 2);
+                    ft_putendl_fd(*values, 2);
+                    return (1);
+                }
+                new.value = *(++values);
+                vc--;
+            }
             new.id = def->id;
-            new.value = NULL;
             ft_vec_push(&out->params, &new);
         } else if ((findex = ft_vec_find(cmd->sub, (void *)*values, &ft_cmp_cmd_def)) != (usize)-1) {
             if ((out->sub = malloc(sizeof(t_cmd))) == NULL) {

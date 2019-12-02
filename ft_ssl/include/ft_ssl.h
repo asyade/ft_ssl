@@ -5,4 +5,12 @@
 #include "ft_acrypto.h"
 
 
+typedef struct      s_ctx
+{
+    t_opts          opts;
+    usize           stdin_len;
+    t_buffer        *stdin_raw;
+}                   t_ctx;
+
+
 #endif

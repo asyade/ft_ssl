@@ -76,6 +76,7 @@ i32                ft_bufexpand(t_buffer **buffer, size_t new_size)
         return (1);
     }
     ft_bufwr(new, (*buffer) + 1, (*buffer)->size, 0);
+    ft_buffree(*buffer);
     *buffer = new;
     return (0);
 }
@@ -111,4 +112,3 @@ void                *ft_bufrd(t_buffer *rc, usize len, usize offset)
         return (NULL);
     }
 }
-
